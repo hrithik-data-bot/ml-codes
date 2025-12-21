@@ -33,12 +33,28 @@ class LinearRegression:
         return np.array(errors), np.array(weight), np.array(bias)
 
 
+    @property
+    def _coefficient(self) -> float:
+        """returns coefficient of model"""
+
+        errors, slope, _ = self.train()
+        min_error_idx = np.argmin(errors)
+        return slope[min_error_idx]
+
+
+    @property
+    def _intercept(self) -> float:
+        """returns intercept of model"""
+
+        errors, _, intercept = self.train()
+        min_error_idx = np.argmin(errors)
+        return intercept[min_error_idx]
+        
+
     def predict(self, X: np.array) -> np.array:
         """predict method for Linear Regression"""
 
-        errors, slope, intercept = self.train()
-        min_error_idx = np.argmin(errors)
-        predictions = slope[min_error_idx]*X + intercept[min_error_idx]
+        predictions = self._coefficient*X + self._intercept
         return predictions
 
 
@@ -46,5 +62,7 @@ if __name__ == "__main__":
 
     X = np.array([1, 2, 5, 100, 102])
     y = np.array([100, 120, 100, 105, 111])
-    lr = LinearRegression(X, y, alpha=0.0005, iterations=100)
+    lr = LinearRegression(X, y, alpha=0.001, iterations=100)
+    print(lr._coefficient)
+    print(lr._intercept)
     print(lr.predict(X))
