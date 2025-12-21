@@ -2,7 +2,6 @@
 
 
 from dataclasses import dataclass
-from matplotlib import pyplot as plt
 import numpy as np
 
 @dataclass
@@ -13,23 +12,27 @@ class LinearRegression:
     y: np.array
     alpha: float
     iterations: int
+    initial_weight: float
+    initial_bias: float
 
 
     def train(self) -> None:
         """train Linear Regression method"""
 
         errors, weight, bias = [], [], []
-        initial_w, initial_b = 1, 100
-        for _ in range(self.iterations):
-            y_pred = initial_w*self.X + initial_b
+        for e, _ in enumerate(range(self.iterations), start=1):
+            y_pred = self.initial_weight*self.X + self.initial_bias
             error = y_pred - self.y
             squared_error = error**2
             mean_squared_error = np.mean(squared_error)/2
             dw = np.mean(error*self.X)
             db = np.mean(error)
-            initial_w = initial_w - self.alpha*dw
-            initial_b = initial_b - self.alpha*db
-            errors.append(mean_squared_error); weight.append(initial_w); bias.append(initial_b)
+            self.initial_weight = self.initial_weight - self.alpha*dw
+            self.initial_bias = self.initial_bias - self.alpha*db
+            errors.append(mean_squared_error); weight.append(self.initial_weight); bias.append(self.initial_bias)
+            print(f"Loss at iteration:- {e}; Slope:- {self.initial_weight}; Intercept:- {self.initial_bias}")
+        min_error_idx = errors.index(min(errors))
+        self.initial_weight, self.initial_bias = weight[min_error_idx], bias[min_error_idx]
         return np.array(errors), np.array(weight), np.array(bias)
 
 
@@ -37,18 +40,14 @@ class LinearRegression:
     def _coefficient(self) -> float:
         """returns coefficient of model"""
 
-        errors, slope, _ = self.train()
-        min_error_idx = np.argmin(errors)
-        return slope[min_error_idx]
+        return self.initial_weight
 
 
     @property
     def _intercept(self) -> float:
         """returns intercept of model"""
 
-        errors, _, intercept = self.train()
-        min_error_idx = np.argmin(errors)
-        return intercept[min_error_idx]
+        return self.initial_bias
         
 
     def predict(self, X: np.array) -> np.array:
@@ -62,7 +61,5 @@ if __name__ == "__main__":
 
     X = np.array([1, 2, 5, 100, 102])
     y = np.array([100, 120, 100, 105, 111])
-    lr = LinearRegression(X, y, alpha=0.001, iterations=100)
-    print(lr._coefficient)
-    print(lr._intercept)
-    print(lr.predict(X))
+    lr = LinearRegression(X, y, alpha=0.0005, iterations=100, initial_weight=1, initial_bias=100)
+    print(lr.train())
