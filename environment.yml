@@ -1,1 +1,16 @@
 name: ml-codes
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.10.6
+  - pandas
+  - matplotlib
+  - seaborn
+  - python-dotenv
+  - autopep8
+  - pylint
+  - pip
+  - pip:
+      - tqdm
