@@ -1,4 +1,5 @@
 name: ml-codes
+
 channels:
   - conda-forge
   - defaults
@@ -11,6 +12,7 @@ dependencies:
   - seaborn
   - python-dotenv
   - autopep8
+  - ipykernel
   - pylint
   - pip
   - pip:
