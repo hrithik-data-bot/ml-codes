@@ -55,11 +55,3 @@ class LinearRegression:
 
         predictions = self._coefficient*X + self._intercept
         return predictions
-
-
-if __name__ == "__main__":
-
-    X = np.array([1, 2, 5, 100, 102])
-    y = np.array([100, 120, 100, 105, 111])
-    lr = LinearRegression(X, y, alpha=0.0005, iterations=100, initial_weight=1, initial_bias=100)
-    print(lr.train())
