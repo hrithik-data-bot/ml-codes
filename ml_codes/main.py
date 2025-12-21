@@ -20,7 +20,11 @@ class LinearRegression:
         return mean_squared_error
 
 
-    def train(self) -> None:
+    def train(self, seed: int, learning_rate: float) -> None:
         """train Linear Regression method"""
 
-        pass
+        np.random.seed(seed=seed)
+        initial_weight, initial_bias = tuple(np.random.randint(1, 100, 2))
+        y_hat = initial_weight*self.X + initial_bias
+        error = self.cost_function(y_hat=y_hat)
+        
