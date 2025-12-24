@@ -14,6 +14,7 @@ class LinearRegression:
     iterations: int
     initial_weight: float
     initial_bias: float
+    model_summary = None
     is_multiple: bool = field(init=False)
 
     def __post_init__(self):
@@ -43,16 +44,11 @@ class LinearRegression:
             errors.append(mean_squared_error)
             weight.append(self.initial_weight)
             bias.append(self.initial_bias)
-            print(f"Loss at iteration:- {e}; Slope:- {self.initial_weight}; Intercept:- {self.initial_bias}")
-
+        self.model_summary = {"MSE": np.array(errors), "Weights": np.array(weight), "Bias": np.array(bias)}
         min_error_idx = errors.index(min(errors))
         self.initial_weight, self.initial_bias = (weight[min_error_idx], bias[min_error_idx],)
 
-        return {
-            "MSE": np.array(errors),
-            "Weights": np.array(weight),
-            "Bias": np.array(bias),
-        }
+        return f"Model Trained"
 
     @property
     def _coefficient(self) -> float:
@@ -66,5 +62,8 @@ class LinearRegression:
 
     def predict(self, X: np.array) -> np.array:
         """predict method for Linear Regression"""
-        predictions = self._coefficient * X + self._intercept
+        if self.is_multiple:
+            predictions = np.array([np.dot(self.initial_weight, row)+self.initial_bias for row in self.X])
+        else:
+            predictions = self._coefficient * X + self._intercept
         return predictions
