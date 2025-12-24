@@ -1,7 +1,7 @@
 """Linear Regression module for single variable"""
 
 from typing import Dict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import numpy as np
 
 @dataclass
@@ -14,6 +14,11 @@ class SingleLinearRegression:
     iterations: int
     initial_weight: float
     initial_bias: float
+    is_multiple: bool = field(init=False)
+
+
+    def __post_init__(self):
+        self.is_multiple = self.X.ndim > 1 and self.X.shape[1] != 1
 
 
     def train(self) -> Dict:
@@ -21,10 +26,16 @@ class SingleLinearRegression:
 
         errors, weight, bias = [], [], []
         for e, _ in enumerate(range(self.iterations), start=1):
+            if self.is_multiple:
+               y_pred = np.array([np.dot(self.initial_weight, row) + self.initial_bias for row in self.X]) 
             y_pred = self.initial_weight*self.X + self.initial_bias
             error = y_pred - self.y
             squared_error = error**2
             mean_squared_error = np.mean(squared_error)/2
+            if self.is_multiple:
+                for _ in self.initial_weight:
+                    dw = np.mean(error*self.X)
+                    self.initial_weight = self.initial_weight - self.alpha*dw
             dw = np.mean(error*self.X)
             db = np.mean(error)
             self.initial_weight = self.initial_weight - self.alpha*dw
@@ -113,7 +124,12 @@ class MultipleLinearRegression:
 if __name__ == "__main__":
     X = np.array([[1,2,1],[2,1,2],[1,3,2]])
     y = np.array([5,6,12])
-    model = MultipleLinearRegression(X=X, y=y, alpha=0.001, iterations=1000, initial_weight=np.array([1, 2.5, 1.5]), initial_bias=4)
+    model = SingleLinearRegression(X=X, y=y, alpha=0.001, iterations=3, initial_weight=np.array([1, 2.5, 1.5]), initial_bias=4)
+    print(model.train())
+    print(model._coefficient)
+    print(model._intercept)
+    print("*"*50)
+    model = MultipleLinearRegression(X=X, y=y, alpha=0.001, iterations=3, initial_weight=np.array([1, 2.5, 1.5]), initial_bias=4)
     print(model.train())
     print(model._coefficient)
     print(model._intercept)
