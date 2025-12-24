@@ -1,12 +1,12 @@
 """Linear Regression module for single variable"""
 
-
+from typing import Dict
 from dataclasses import dataclass
 import numpy as np
 
 @dataclass
-class LinearRegression:
-    """Linear Regression Class"""
+class SingleLinearRegression:
+    """Single Linear Regression Class"""
 
     X: np.array
     y: np.array
@@ -16,7 +16,7 @@ class LinearRegression:
     initial_bias: float
 
 
-    def train(self) -> None:
+    def train(self) -> Dict:
         """train Linear Regression method"""
 
         errors, weight, bias = [], [], []
@@ -33,7 +33,7 @@ class LinearRegression:
             print(f"Loss at iteration:- {e}; Slope:- {self.initial_weight}; Intercept:- {self.initial_bias}")
         min_error_idx = errors.index(min(errors))
         self.initial_weight, self.initial_bias = weight[min_error_idx], bias[min_error_idx]
-        return np.array(errors), np.array(weight), np.array(bias)
+        return {'MSE': np.array(errors), 'Weights':np.array(weight), 'Bias':np.array(bias)}
 
 
     @property
@@ -55,3 +55,33 @@ class LinearRegression:
 
         predictions = self._coefficient*X + self._intercept
         return predictions
+
+
+@dataclass
+class MultipleLinearRegression:
+    
+    X: np.array
+    y: np.array
+    alpha: float
+    iterations: int
+    initial_weight: np.array
+    initial_bias: float
+
+    def train(self) -> Dict:
+        """train multiple linear regression example"""
+    
+        errors_, weights_, bias_ = [], [], []
+        
+        for row in self.X:
+            y_pred = np.dot(self.initial_weight, row) + self.initial_bias
+                            
+            
+
+
+if __name__ == "__main__":
+    X = np.array([[1,2,1],[2,1,2],[1,3,2]])
+    y = np.array([5,6,12])
+    model = MultipleLinearRegression(X=X, y=y, alpha=0.001, iterations=5, initial_weight=np.array([1, 2.5, 1.5]), initial_bias=4)
+    print(model.train())
+            
+            
