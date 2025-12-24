@@ -72,9 +72,11 @@ class MultipleLinearRegression:
     
         errors_, weights_, bias_ = [], [], []
         
-        for row in self.X:
-            y_pred = np.dot(self.initial_weight, row) + self.initial_bias
-                            
+        y_pred = np.array([np.dot(self.initial_weight, row) + self.initial_bias for row in self.X])
+        error = y_pred - self.y
+        squared_error = error**2
+        mean_squared_error = np.mean(squared_error)/2
+                           
             
 
 
