@@ -17,8 +17,10 @@ class LinearRegression:
     model_summary = None
     is_multiple: bool = field(init=False)
 
+
     def __post_init__(self):
         self.is_multiple = self.X.ndim > 1 and self.X.shape[1] != 1
+
 
     def train(self) -> Dict:
         """train Linear Regression method"""
@@ -47,21 +49,26 @@ class LinearRegression:
         self.model_summary = {"MSE": np.array(errors), "Weights": np.array(weight), "Bias": np.array(bias)}
         min_error_idx = errors.index(min(errors))
         self.initial_weight, self.initial_bias = (weight[min_error_idx], bias[min_error_idx],)
-
         return f"Model Trained"
+
 
     @property
     def _coefficient(self) -> float:
         """returns coefficient of model"""
+
         return self.initial_weight
+
 
     @property
     def _intercept(self) -> float:
         """returns intercept of model"""
+
         return self.initial_bias
+
 
     def predict(self, X: np.array) -> np.array:
         """predict method for Linear Regression"""
+
         if self.is_multiple:
             predictions = np.array([np.dot(self.initial_weight, row)+self.initial_bias for row in self.X])
         else:
