@@ -13,3 +13,9 @@ def mean_squared_error(y_pred: np.array, y_true: np.array) -> float:
     """mean squared error for regression"""
 
     return np.mean((y_pred - y_true)**2)
+
+
+def root_mean_squared_error(y_pred: np.array, y_true: np.array) -> float:
+    """root mean squared error for regression"""
+
+    return np.sqrt(mean_squared_error(y_pred=y_pred, y_true=y_true))
