@@ -22,7 +22,7 @@ class LinearRegression:
         self.is_multiple = self.X.ndim > 1 and self.X.shape[1] != 1
 
 
-    def train(self) -> Dict:
+    def train(self) -> str:
         """train Linear Regression method"""
 
         errors, weight, bias = [], [], []
